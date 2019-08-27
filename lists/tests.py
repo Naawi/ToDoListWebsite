@@ -1,8 +1,10 @@
-from django.urls import resolve
-from django.test import TestCase
-from lists.views import home_page
-from django.http import HttpRequest
 import logging
+from   django.urls            import resolve
+from   django.test            import TestCase
+from   lists.views            import home_page
+from   django.http            import HttpRequest
+from   django.template.loader import render_to_string
+
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -19,6 +21,7 @@ class HomePageTest( TestCase ):
         response = home_page( request )
         # logger.warning( "response content", response.content )
         # result = response.content.decode( 'utf-8' )
-        self.assertTrue( response.content.startswith( b'<html>' ) )
-        self.assertIn( b'<title>To-Do lists</title>', response.content )
-        self.assertTrue( response.content.endswith( b'</html>' ) )
+        request = HttpRequest()
+        response = home_page( request )
+        expected = render_to_string( 'home.html' )
+        self.assertEqual( response.content.decode(), expected )
