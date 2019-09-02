@@ -32,7 +32,7 @@ class NewVisitorTest( LiveServerTestCase ):
         inputbox.send_keys( 'Buy peacock feathers' )
         # Pressing enter should make page update
         inputbox.send_keys( Keys.ENTER )
-        #time.sleep( 1 )
+        time.sleep( 1 )
         user1_list_url = self.browser.current_url
         self.assertRegex( user1_list_url, '/lists/.+' )
         self.check_for_row_in_list_table( '1: Buy peacock feathers' )
@@ -62,6 +62,7 @@ class NewVisitorTest( LiveServerTestCase ):
         inputbox.click()
         inputbox.send_keys( 'Buy milk' )
         inputbox.send_keys( Keys.ENTER )
+        time.sleep( 1 )
 
         # New user gets their own url
         user2_list_url = self.browser.current_url
