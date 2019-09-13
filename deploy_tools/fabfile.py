@@ -1,8 +1,11 @@
 import random
 from   fabric.contrib.files import append, exists
-from   farbic.api           import cd, env, local, run
+from   fabric.api           import cd, env, local, run
 
 REPO_URL = "https://github.com/Naawi/ToDoListWebsite.git"
+env.user = "ubuntu"
+env.key_filename = [ "C:/Users/Nabaa/.ssh/MyKeyPair.pem" ]
+env.hosts = [ "lists-staging.nabaalalawi.com" ]
 
 def deploy():
     site_folder = f'/home/{env.user}/sites/{env.host}'
@@ -34,11 +37,12 @@ def _create_or_update_dotenv():
     if 'DJANGO_DEBUG_FALSE' not in current_contents:
         new_secret = ''.join(random.SystemRandom().choices( 'abcdefghijklmnopqrstuvwxyz0123456789', 
                                                             k = 50 ) )
-    append( '.env', f'DJANGO_SECRET_KEY={new_secret}' )
+        append( '.env', f'DJANGO_SECRET_KEY={new_secret}' )
 
 def _update_static_files():
     run( './virtualenv/bin/python manage.py collectstatic --noinput' )
-    #TODO: check static files are in the main directory
+    if not exists( 'static' ):
+        run( 'mv ../static static' )
 
 def _update_database():
     run( './virtualenv/bin/python manage.py migrate --noinput' )
