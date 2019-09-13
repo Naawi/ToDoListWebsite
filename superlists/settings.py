@@ -26,7 +26,7 @@ if 'DJANGO_DEBUG_FALSE' in os.environ:
 else:
     DEBUG = True
     SECRET_KEY = 'ejo1v%v37=4=l8q_xad)mw^%+=reqs19iq)qi)tsz56=o34+2h'
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = [ 'lists-staging.nabaalalawi.com' ]
 
 
 
