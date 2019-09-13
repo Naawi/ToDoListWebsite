@@ -8,8 +8,8 @@ class ItemValidationTest( FunctionalTest ):
     def test_cannot_add_empty_list_items( self ):
         # user submits empty list item. Hits Enter on the empty input box
         self.browser.get( self.live_server_url )
-        inputbox = self.browser.find_element_by_id( 'id_new_item' )
-        inputbox.click()
+        inputbox = self.get_item_input_box()
+        #inputbox.click()
         inputbox.send_keys( Keys.ENTER )
         time.sleep( 0.5 )
 
@@ -21,16 +21,16 @@ class ItemValidationTest( FunctionalTest ):
         ) )
 
         # user tries again with some text for the item, which now works
-        inputbox = self.browser.find_element_by_id( 'id_new_item' )
-        inputbox.click()
+        inputbox = self.get_item_input_box()
+        #inputbox.click()
         inputbox.send_keys( 'Buy strawberries' )
         inputbox.send_keys( Keys.ENTER )
         time.sleep( 0.5 )
         self.wait_for_row_in_list_table( '1: Buy strawberries' )                           
 
         # user submits a second blank list item
-        inputbox = self.browser.find_element_by_id( 'id_new_item' )
-        inputbox.click()
+        inputbox = self.get_item_input_box()
+        #inputbox.click()
         inputbox.send_keys( Keys.ENTER )
         time.sleep( 0.5 )
         # user receives a similar warning on the list page
@@ -40,8 +40,8 @@ class ItemValidationTest( FunctionalTest ):
         ) )
 
         # user inputs some text in
-        inputbox = self.browser.find_element_by_id( 'id_new_item' )
-        inputbox.click()
+        inputbox = self.get_item_input_box()
+        #inputbox.click()
         inputbox.send_keys( 'Make strawberry jam' )
         inputbox.send_keys( Keys.ENTER )
         time.sleep( 0.5 )
