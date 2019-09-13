@@ -7,6 +7,7 @@ from   django.http            import HttpRequest
 from   django.template.loader import render_to_string
 from   lists.models           import Item, List
 from   django.utils.html      import escape
+from   lists.forms            import ItemForm
 
 
 # Get an instance of a logger
@@ -35,6 +36,10 @@ class HomePageTest( TestCase ):
         response = home_page( request )
         expected = render_to_string( 'home.html', request = request )
         self.assertEqualExceptCSRF( response.content.decode(), expected )
+
+    def test_homepage_uses_item_form( self ):
+        response = self.client.get( '/' )
+        self.assertIsInstance( response.context[ 'forms' ], ItemForm )
 
 
 class ListViewTest( TestCase ):
