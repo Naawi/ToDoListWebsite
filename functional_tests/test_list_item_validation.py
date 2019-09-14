@@ -8,9 +8,9 @@ class ItemValidationTest( FunctionalTest ):
     def test_cannot_add_empty_list_items( self ):
         # user submits empty list item. Hits Enter on the empty input box
         self.browser.get( self.live_server_url )
-        inputbox = self.get_item_input_box()
+        self.get_item_input_box().send_keys( Keys.ENTER )
         #inputbox.click()
-        inputbox.send_keys( Keys.ENTER )
+        #inputbox.send_keys( Keys.ENTER )
         time.sleep( 0.5 )
 
         # The home page refreshes, and there is an error message saying
@@ -18,29 +18,47 @@ class ItemValidationTest( FunctionalTest ):
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:invalid' ) )
 
         # user tries again with some text for the item, which now works
-        inputbox = self.get_item_input_box()
+        self.get_item_input_box().send_keys( 'Buy strawberries' )
         #inputbox.click()
-        inputbox.send_keys( 'Buy strawberries' )
+        #inputbox.send_keys( 'Buy strawberries' )
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:valid' ) )
 
-        inputbox.send_keys( Keys.ENTER )
+        self.get_item_input_box().send_keys( Keys.ENTER )
         time.sleep( 0.5 )
         self.wait_for_row_in_list_table( '1: Buy strawberries' )                           
 
         # user submits a second blank list item
-        inputbox = self.get_item_input_box()
+        self.get_item_input_box().send_keys( Keys.ENTER )
         #inputbox.click()
-        inputbox.send_keys( Keys.ENTER )
+        #inputbox.send_keys( Keys.ENTER )
         time.sleep( 0.5 )
         # user receives a similar warning on the list page
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:invalid' ) )
 
         # user inputs some text in
-        inputbox = self.get_item_input_box()
+        self.get_item_input_box().send_keys( 'Make strawberry jam' )
         #inputbox.click()
-        inputbox.send_keys( 'Make strawberry jam' )
+        #inputbox.send_keys( 'Make strawberry jam' )
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:valid' ) )
-        inputbox.send_keys( Keys.ENTER )
+        self.get_item_input_box().send_keys( Keys.ENTER )
         time.sleep( 0.5 )
         self.wait_for_row_in_list_table( '1: Buy strawberries' )  
         self.wait_for_row_in_list_table( '2: Make strawberry jam' )  
+
+    def test_cannot_add_duplicate_items( self ):
+        # user starts a new list
+        self.browser.get( self.live_server_url )
+        self.get_item_input_box().send_keys( 'Buy trainers' )
+        self.get_item_input_box().send_keys( Keys.ENTER )
+        self.wait_for_row_in_list_table( '1: Buy trainers' )
+
+        # user enters same list item twice
+        self.get_item_input_box().send_keys( 'Buy trainers' )
+        self.get_item_input_box().send_keys( Keys.ENTER )
+
+        # user sees a helpful error message
+        self.wait_for( lambda: self.assertEqual( 
+            self.browser.find_element_by_css_selector( '.has-error' ).text,
+            "You've already got this in your list"
+        ) )
+
