@@ -8,6 +8,7 @@ from   django.template.loader import render_to_string
 from   lists.models           import Item, List
 from   django.utils.html      import escape
 from   lists.forms            import ItemForm, EMPTY_ITEM_ERROR
+from   unittest               import skip
 
 
 # Get an instance of a logger
@@ -78,11 +79,16 @@ class ListViewTest( TestCase ):
         response = self.post_invalid_input()
         self.assertContains( response, escape( EMPTY_ITEM_ERROR ) )
 
-    def test_displays_item_form( self ):
-        lst = List.objects.create()
-        response = self.client.get( f'/lists/{lst.id}/' )
-        self.assertIsInstance( response.context[ 'form' ], ItemForm )
-        self.assertContains( response, 'name="text"' )
+    @skip( 'S' )
+    def test_duplicate_item_validation_errors_end_up_on_lists_page( self ):
+        lst1 = List.objects.create()
+        item1 = Item.objects.create( list = lst1, text = 'textey' )
+        response = self.client.post( f'/lists/{lst1.id}/', data = { 'text': 'textey' } )
+
+        expected_error = escape( "You've already got thid in your list" )
+        self.assertContains( response, expected_error )
+        self.assertTemplateUsed( response, 'list.html' )
+        self.assertEqual( Item.objects.all().count(), 1 )
          
 
 class NewListTest( TestCase ):
