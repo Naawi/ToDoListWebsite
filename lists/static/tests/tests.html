@@ -21,13 +21,13 @@
 
         <script>
             QUnit.test( "errors should be hidden on keypress", function ( assert ) {
-                initialise();
+                window.Superlists.initialise();
                 $( 'input[name="text"]' ).keypress();
                 assert.equal( $( '.has-error' ).is( ':visible' ), false );
             } );
 
             QUnit.test( "errors shouldn't be hidden if there is no keypress", function ( assert ) {
-                initialise();
+                window.Superlists.initialise();
                 assert.equal( $( '.has-error' ).is( ':visible' ), true );
             } );
         </script>

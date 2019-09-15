@@ -1,7 +1,6 @@
-var initialise = () => {
-    console.log('initialise called');
+window.Superlists = {}; //namespace
+window.Superlists.initialise = () => {
     $( 'input[name="text"]' ).keypress( () => {
         $( '.has-error' ).hide();
     } );
 };
-console.log('list.js loaded');

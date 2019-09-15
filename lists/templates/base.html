@@ -39,8 +39,10 @@
     <script src="../static/list.js"></script>
 
     <script>
-      initialise();
+      $( document ).ready( () => { //onload boilerplate
+        window.Superlists.initialise();
+      } );
     </script>
-    
+
   </body>
 </html>
