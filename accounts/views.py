@@ -1,9 +1,10 @@
 import uuid
 import sys
 from   django.shortcuts    import  render, redirect
-from   django.core.mail   import send_mail
+from   django.core.mail    import send_mail
 from   accounts.models     import Token
-from   django.contrib.auth import authenticate, login, logout
+from   django.contrib.auth import authenticate
+from   django.contrib.auth import login as lgin, logout as lgout
 
 
 
@@ -22,11 +23,11 @@ def send_login_email( request ):
 def login( request ):
     print( 'login view' , file = sys.stderr )
     uid = request.GET.get( 'uid' )
-    user = authenticate( uid = uid )
+    user = authenticate( username = uid )
     if user is not None:
-        login( request, user )
+        lgin( request, user )
     return redirect( '/' )
 
 def logout( request ):
-    logout( request )
+    lgout( request )
     return redirect( '/' )

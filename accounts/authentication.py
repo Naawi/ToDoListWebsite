@@ -4,12 +4,12 @@ from   accounts.models import ListUser, Token
 
 class PasswordlessAuthenticationBackend( object ):
 
-    def authenticate( self, uid ):
-        print( 'uid', uid, file = sys.stderr )
-        if not Token.objects.filter( uid = uid ).exists():
+    def authenticate( self, request, password = None, username = None, **kwargs ):
+        print( 'uid', username, file = sys.stderr )
+        if not Token.objects.filter( uid = username ).exists():
             print( 'no token found', file = sys.stderr )
             return None
-        token = Token.objects.get( uid = uid )
+        token = Token.objects.get( uid = username )
         print( 'got token' , file = sys.stderr )
         try:
             user = ListUser.objects.get( email = token.email )
