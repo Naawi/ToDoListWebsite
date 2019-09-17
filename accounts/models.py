@@ -10,4 +10,4 @@ class User( models.Model ):
 
 
 class Token( models.Model ):
-    uid = models.
+    email = models.EmailField()
