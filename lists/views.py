@@ -3,6 +3,11 @@ from django.http            import HttpResponse
 from lists.models           import Item, List
 from lists.forms            import ItemForm, ExistingListItemForm
 from django.core.exceptions import ValidationError
+from django.contrib.auth    import get_user_model
+from html                   import unescape
+
+
+User = get_user_model()
 
 # Create your views here.
 def home_page( request ):
@@ -21,13 +26,16 @@ def view_list( request, list_id ):
 def new_list( request ):
     form = ItemForm( data = request.POST )
     if form.is_valid():
-        lst = List.objects.create()
+        lst = List()
+        lst.owner = request.user
+        lst.save()
         form.save( for_list = lst)
         return redirect( lst )
     else:
         return render( request, 'home.html', { "form": form } )
 
-def my_lists( request, email_id ):
-    return render( request, 'my_lists.html' )
+def my_lists(request, email):
+    owner = User.objects.get( email = email )
+    return render( request, 'my_lists.html', { 'owner': owner } )
 
 

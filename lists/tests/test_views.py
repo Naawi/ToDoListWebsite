@@ -5,9 +5,11 @@ from   django.utils.html      import escape
 from   lists.forms            import ( DUPLICATE_ITEM_ERROR,
                                        EMPTY_ITEM_ERROR,
                                        ExistingListItemForm, ItemForm )
+from   django.contrib.auth    import get_user_model
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 
 # Create your tests here.
@@ -156,10 +158,24 @@ class NewListTest( TestCase ):
         response = self.client.post( '/lists/new', data={ 'text': '' } )
         self.assertContains( response, escape( EMPTY_ITEM_ERROR ) )
 
+    def test_list_owner_is_saved_if_user_is_authenticated( self ):
+        user = User.objects.create( email = 'navin@b.com' )
+        self.client.force_login( user )
+        self.client.post( '/lists/new', data = { 'text': 'new item' } )
+        lst = List.objects.first()
+        self.assertEqual( lst.owner, user )
+
 
 class MyListsTest( TestCase ):
 
     def test_my_lists_url_renders_my_lists_template( self ):
+        correct_user = User.objects.create( email = 'n@b.com' )
         response = self.client.get( '/lists/users/n@b.com' )
         self.assertTemplateUsed( response, 'my_lists.html' )
+
+    def test_passes_correct_owner_to_template(self):
+        User.objects.create( email = 'wrong@owner.com' )
+        correct_user = User.objects.create( email = 'navin@b.com' )
+        response = self.client.get( '/lists/users/navin@b.com' )
+        self.assertEqual( response.context[ 'owner' ], correct_user )
 
