@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'lists',
     'accounts',
+    'functional_tests',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -131,6 +132,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath( os.path.join( BASE_DIR, 'static' ) )
 
+# Logging handlers
 
 LOGGING = {
     'version': 1,
@@ -152,7 +154,7 @@ LOGGING = {
 }
 
 
-#Email configuration
+# Email configuration
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'lists.nabaalalawi@gmail.com'
