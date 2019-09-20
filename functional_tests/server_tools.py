@@ -1,14 +1,18 @@
-from fabric.api import run
+from fabric.api import run, env
 from fabric.context_managers import settings, shell_env
 
+
+env.user = "ubuntu"
+env.key_filename = [ "C:/Users/Nabaa/.ssh/MyKeyPair.pem" ]
+env.hosts = [ "lists-staging.nabaalalawi.com" ]
 
 def _get_manage_dot_py( host ):
     return f'~/sites/{host}/virtualenv/bin/python ~/sites/{host}/manage.py'
 
 def reset_database( host ):
     manage_dot_py = _get_manage_dot_py( host )
-    with settings( host_string = f'ubuntu@{host}' ):
-        run( f'{manage_dot_py} flush --noinput')
+    with settings( host_string = f'ubuntu@{host}' ):  
+        run( f'{manage_dot_py} flush --noinput' )
 
 def _get_server_env_vars( host ):
     env_lines = run( f'cat ~/sites/{host}/.env' ).splitlines()  
