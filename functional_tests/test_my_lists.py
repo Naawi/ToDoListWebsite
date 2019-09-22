@@ -2,6 +2,7 @@ from django.conf import settings
 from .base import FunctionalTest
 from .server_tools import create_session_on_server
 from .management.commands.create_session import create_pre_authenticated_session
+import time
 
 
 class MyListsTest( FunctionalTest ):
@@ -49,5 +50,5 @@ class MyListsTest( FunctionalTest ):
 
         # user1 logs out
         self.browser.find_element_by_link_text( 'Log out' ).click()
-        self.wait_for( lambda: self.assertEqual( self.browser.find_element_by_link_text( 'My lists' ), [] ) )
+        self.wait_for( lambda: self.assertEqual( self.browser.find_elements_by_link_text( 'My lists' ), [] ) )
         
