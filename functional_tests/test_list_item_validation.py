@@ -2,6 +2,7 @@ from   selenium.webdriver.common.keys     import Keys
 from   .base                              import FunctionalTest
 from   unittest                           import skip
 import time
+from .list_page import ListPage
 
 class ItemValidationTest( FunctionalTest ):
 
@@ -12,13 +13,14 @@ class ItemValidationTest( FunctionalTest ):
         # user submits empty list item. Hits Enter on the empty input box
         self.browser.get( self.live_server_url )
         self.get_item_input_box().send_keys( Keys.ENTER )
+        #self.get_item_input_box().send_keys( Keys.ENTER )
 
         # The home page refreshes, and there is an error message saying
         # that list items cannot be blank
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:invalid' ) )
 
         # user tries again with some text for the item, which now works
-        self.add_list_item( 'Buy strawberries' )
+        list_page = ListPAge( self ).add_list_item( 'Buy strawberries' )
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:valid' ) )                           
 
         # user submits a second blank list item
@@ -28,13 +30,13 @@ class ItemValidationTest( FunctionalTest ):
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:invalid' ) )
 
         # user inputs some text in
-        self.add_list_item( 'Make strawberry jam' )
+        list_page.add_list_item( 'Make strawberry jam' )
         self.wait_for( lambda: self.browser.find_elements_by_css_selector( '#id_text:valid' ) )
 
     def test_cannot_add_duplicate_items( self ):
         # user starts a new list
         self.browser.get( self.live_server_url )
-        self.add_list_item( 'Buy trainers' )
+        list_page.add_list_item( 'Buy trainers' )
 
         # user enters same list item twice
         self.get_item_input_box().send_keys( 'Buy trainers' )
@@ -49,7 +51,7 @@ class ItemValidationTest( FunctionalTest ):
     def test_error_messages_are_cleared_on_input( self ):
         # user starts a list and causes a validation error
         self.browser.get( self.live_server_url )
-        self.add_list_item( 'Am I too close?' )
+        list_page.add_list_item( 'Am I too close?' )
         self.wait_for_row_in_list_table( '1: Am I too close?' )
         self.get_item_input_box().send_keys( 'Am I too close?' )
         self.get_item_input_box().send_keys( Keys.ENTER )
